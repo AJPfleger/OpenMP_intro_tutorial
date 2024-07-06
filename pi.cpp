@@ -17,23 +17,28 @@ cpp-port: AJPfleger
 */
 #include <stdio.h>
 #include <omp.h>
+#include <numeric>
+#include <vector>
 
 int main () {
   const long num_steps = 100000000;
   constexpr double step = 1.0 / static_cast<double>(num_steps);
+  const std::uint32_t num_threads = 8;
 
-  double x = 0.0;
-  double pi = 0.0;
-  double sum = 0.0;
+  std::vector<double> sum(num_threads, 0.);
 
   const double start_time = omp_get_wtime();
 
-  for (long i = num_steps; i > 0; i--) {
-    x = (i - 0.5) * step;
-    sum = sum + 4.0 / (1.0 + x * x);
+  #pragma omp parallel num_threads(num_threads)
+  {
+    const int id = omp_get_thread_num();
+    for (long i = num_steps - id; i > 0; i -= num_threads) {
+      double x = (i - 0.5) * step;
+      sum[id] += 4.0 / (1.0 + x * x);
+    }
   }
 
-  pi = step * sum;
+  const double pi = step * std::accumulate(sum.begin(), sum.end(), 0.);
 
   const double run_time = omp_get_wtime() - start_time;
 
