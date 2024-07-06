@@ -15,3 +15,6 @@ include_directories(/usr/local/Cellar/libomp/18.1.8/include)
 
 add_executable(hello hello.cpp)
 target_link_libraries(hello ${OpenMP_omp_LIBRARY})
+
+add_executable(pi pi.cpp)
+target_link_libraries(pi ${OpenMP_omp_LIBRARY})
