@@ -31,21 +31,20 @@ void processwork(struct node* p) {
 }
 
 struct node* init_list(struct node* p) {
-  struct node* head = nullptr;
-  struct node* temp = nullptr;
-
-  head = (struct node*)malloc(sizeof(struct node));
+  struct node* head = (struct node*)malloc(sizeof(struct node));
   p = head;
   p->data = FS;
   p->fibdata = 0;
   for (int i = 0; i < N; i++) {
-    temp  =  (struct node*)malloc(sizeof(struct node));
+    struct node* temp  =  (struct node*)malloc(sizeof(struct node));
     p->next = temp;
     p = temp;
     p->data = FS + i + 1;
     p->fibdata = i+1;
   }
+
   p->next = nullptr;
+
   return head;
 }
 
@@ -64,9 +63,11 @@ int main(int argc, char *argv[]) {
 
   const double start = omp_get_wtime();
 
-//  #pragma omp parallel num_threads(num_threads)
+  #pragma omp parallel num_threads(8)
   {
+    #pragma omp single
     while (p != nullptr) {
+      #pragma omp task firstprivate(p)
       processwork(p);
       p = p->next;
     }
