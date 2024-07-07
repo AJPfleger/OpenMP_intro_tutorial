@@ -24,3 +24,6 @@ target_link_libraries(mandel ${OpenMP_omp_LIBRARY})
 
 add_executable(linked linked.cpp)
 target_link_libraries(linked ${OpenMP_omp_LIBRARY})
+
+add_executable(prod_cons prod_cons.cpp)
+target_link_libraries(prod_cons ${OpenMP_omp_LIBRARY})
