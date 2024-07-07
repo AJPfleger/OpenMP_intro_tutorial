@@ -83,37 +83,32 @@ History:
 */
 #include <stdio.h>
 #include <omp.h>
-#include "random.h"
+#include "random.hpp"
 
 // 
 // The monte carlo pi program
 //
 
-static long num_trials = 10000;
+static long num_trials = 100000;
 
-int main ()
-{
-   long i;  long Ncirc = 0;
-   double pi, x, y, test;
-   double r = 1.0;   // radius of circle. Side of squrare is 2*r 
+int main () {
+  long Ncirc = 0;
+  const double r = 1.0;   // radius of circle. Side of square is 2*r
 
-   seed(-r, r);  // The circle and square are centered at the origin
-#pragma omp parallel for private(x,y,test) reduction(+:Ncirc)
-   for(i=0;i<num_trials; i++)
-   {
-      x = drandom(); 
-      y = drandom();
+  seed(-r, r);  // The circle and square are centered at the origin
+  #pragma omp parallel for reduction(+:Ncirc)
+  for(long i = 0; i < num_trials; i++) {
+    const double x = drandom();
+    const double y = drandom();
 
-      test = x*x + y*y;
+    if (x * x + y * y <= r * r) { Ncirc++; }
+  }
 
-      if (test <= r*r) Ncirc++;
-    }
+  const double pi = 4. * ((double)Ncirc/(double)num_trials);
 
-    pi = 4.0 * ((double)Ncirc/(double)num_trials);
+  printf("\n %ld trials, pi is %lf \n",num_trials, pi);
 
-    printf("\n %ld trials, pi is %lf \n",num_trials, pi);
-
-    return 0;
+  return 0;
 }
 	  
 

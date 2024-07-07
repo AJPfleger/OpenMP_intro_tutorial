@@ -27,3 +27,6 @@ target_link_libraries(linked ${OpenMP_omp_LIBRARY})
 
 add_executable(prod_cons prod_cons.cpp)
 target_link_libraries(prod_cons ${OpenMP_omp_LIBRARY})
+
+add_executable(pi_mc pi_mc.cpp)
+target_link_libraries(pi_mc ${OpenMP_omp_LIBRARY})
