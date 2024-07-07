@@ -34,16 +34,16 @@ static long PMOD        = 714025;
 long random_last = 0;
 double random_low, random_hi;
 
+#pragma omp threadprivate(random_last)
+// TODO generate different seed for every thread. this parallelisation is pointless.
 double drandom() {
-  long random_next;
-  double ret_val;
-
   // compute an integer random number from zero to mod
-  random_next = (MULTIPLIER  * random_last + ADDEND)% PMOD;
+  long random_next = (MULTIPLIER  * random_last + ADDEND)% PMOD;
+//#pragma omp critical
   random_last = random_next;
 
   // shift into preset range
-  ret_val = ((double)random_next/(double)PMOD)*(random_hi-random_low)+random_low;
+  double ret_val = ((double)random_next/(double)PMOD)*(random_hi-random_low)+random_low;
   return ret_val;
 }
 

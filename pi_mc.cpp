@@ -89,7 +89,7 @@ History:
 // The monte carlo pi program
 //
 
-static long num_trials = 100000;
+static long num_trials = 1000000;
 
 int main () {
   long Ncirc = 0;
@@ -106,7 +106,7 @@ int main () {
 
   const double pi = 4. * ((double)Ncirc/(double)num_trials);
 
-  printf("\n %ld trials, pi is %lf \n",num_trials, pi);
+  printf("\n %ld trials, pi is %lf \n", num_trials, pi);
 
   return 0;
 }
